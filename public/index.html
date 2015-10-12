@@ -1,0 +1,109 @@
+﻿<html>
+<head>
+</head>
+<body>
+	<div id="images">
+	</div>
+
+	<script type="text/javascript" src="libs/underscore.js"></script>
+	<script type="text/javascript" src="libs/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script>
+
+
+	  	$( document ).ready(function() {
+
+			$.get('getip', function(data){
+				var ip = 'http://'+data;
+				console.log(ip)
+		  		var socket = io(ip);
+				console.log(ip)
+
+		  		var imagesel = $('#images');
+			  	socket.on('new:insts', function (data) {
+
+
+			  		var url = data.show;
+			        $.ajax({
+			            url: url,
+			            type: 'POST',
+			            crossDomain: true,
+			            dataType: 'jsonp'
+			        }).done(function (data) {
+			        	console.log(data);
+
+			  			var markup = '';
+			            // self.renderTemplate(data);
+			            var insts = data.data;
+
+				        _.each(insts, function (inst) {
+				         	console.log(inst)
+				            	markup += '<div style="margin-top:10px;">'
+				            		// markup += inst.text;
+				            		// markup += '<div>'
+				            
+				            if(inst.images.standard_resolution)
+				            {
+					                // _.each(inst.images.standard_resolution, function (image) {
+					                	// console.log(image)
+					                    // imageslist.push(val.media_url);
+					                    markup += '<div style="display:inline-block;text-align:center;">'
+						  					// markup += '<a href="'+inst.images.standard_resolution.url+'" target="_blank">'
+						  						markup += '<img src="'+inst.images.standard_resolution.url+'" style="max-width:150px;border:1px solid black;vertical-align:top;"/>';
+						  					// markup +='</a>'
+						  				markup += '</div>'
+					                // });
+				            }
+					                // markup += '</div>'
+				                markup += '</div>'
+				        });
+				        imagesel.append(markup);
+			        }); 
+
+			  		// console.log(data);
+			  		// return;
+			  		
+			  		/*
+			  		if(data && data.list)
+			  		{
+			  			var tweets = _.isArray(data.list)?data.list:[data.list];
+
+				        _.each(tweets, function (tweet) {
+				         	console.log(tweet)
+				            	markup += '<div style="margin-top:10px;">'
+				            		markup += tweet.text;
+				            		markup += '<div>'
+				            if(tweet.entities && tweet.entities.media)
+				            {
+					                _.each(tweet.entities.media, function (media) {
+					                    // imageslist.push(val.media_url);
+					                    markup += '<div style="display:inline-block;text-align:center;">'
+						  					markup += '<a href="'+media.media_url+'" target="_blank">'
+						  						markup += '<img src="'+media.media_url+'" style="max-width:150px;border:1px solid black;vertical-align:top;"/>';
+						  					markup +='</a>'
+						  				markup += '</div>'
+					                });
+				            }
+					                markup += '</div>'
+				                markup += '</div>'
+				        });
+						*/
+
+				        /*
+			  			data.list.forEach(function (image_url) {
+			  				markup += '<div style="display:inline-block;text-align:center;">'
+			  					markup += '<a href="'+image_url+'" target="_blank">'
+			  						markup += '<img src="'+image_url+'" style="max-width:150px;border:1px solid black;vertical-align:top;"/>';
+			  					markup +='</a>'
+			  				markup += '</div>'
+			  			});
+			  		};
+						*/
+			  	});
+	        });
+		  	
+		});
+
+	</script>
+</body>
+</html>
